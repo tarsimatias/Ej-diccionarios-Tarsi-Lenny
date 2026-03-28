@@ -9,7 +9,7 @@ class Program
                  { "Madera", 15 },
                  {"Ladrillo", 13}
         };
-        int tarsiHizoCambios= 0;
+        
         int menu;
         List<string> opciones = new List<string>()
         {
@@ -37,40 +37,90 @@ class Program
         {
             case 1:
 
-            foreach (KeyValuePair<string,int> recurso in dicRecursos)
-            {
-               Console.WriteLine("Tenés " + recurso.Value +" de " + recurso.Key + ".")     ;
-            }
+            verInventario(dicRecursos);
                 break;
 
             case 2:
-            string Recurso;
-            int cantidad = 0;
-              Recurso = pedirString("Que recurso queres cargar?");
-                 if (dicRecursos.ContainsKey(Recurso))
-                {
-                   cantidad = pedirInt("Cuanto queres cargarle?");
-                    dicRecursos[Recurso] += cantidad;
-                }
-                else{
-                    dicRecursos.Add(Recurso, 0);
-
-                }
+            actualizarStock(dicRecursos);
                 break;
 
             case 3:
-
+                consumirRecurso(dicRecursos);
                 break;
 
             case 4:
-                
+                consultarRecurso(dicRecursos);
                 break;
 
-            case 5:
-              
-                break;
         }
         }
+        private static void consultarRecurso(Dictionary<string, int> dicRecursos)
+    {
+        string recurso = pedirString("¿Qué recurso desea consultar?: ");
+        if (dicRecursos.ContainsKey(recurso))
+        {
+            Console.WriteLine("Hay " + dicRecursos[recurso] + " de " + recurso + ".");
+        }
+        else
+        {
+            Console.WriteLine("No tienes ese recurso");
+        }
+        
+    }
+        private static void consumirRecurso(Dictionary<string, int> dicRecursos)
+    {
+        string recurso;
+        int cantidad = 0;
+        int consumicion = 0;
+        recurso = pedirString("¿Qué recurso desea consumir?: ");
+        
+        if (dicRecursos.ContainsKey(recurso))
+        {
+            cantidad = pedirInt("¿Cuánta cantidad desea consumir?: ");
+            consumicion = dicRecursos[recurso] - cantidad;
+            if(consumicion >= 0)
+            {
+                dicRecursos[recurso] = consumicion;
+                Console.WriteLine("Te has quedado con " + consumicion + " de " + recurso + ".");
+                if(consumicion < 5)
+                {
+                    Console.WriteLine("ALERTA: REABASTECER " + recurso + "!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("No puedes consumir esa cantidad.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("No tienes ese recurso disponible.");
+        }
+    }
+        private static void actualizarStock(Dictionary<string, int> dicRecursos)
+    {
+        string recurso;
+        int cantidad = 0;
+              recurso = pedirString("¿Qué recurso desea cargar?: ");
+              cantidad = pedirInt("¿Cuánta cantidad desea cargarle?: ");
+                 if (dicRecursos.ContainsKey(recurso))
+                {
+                   
+                    dicRecursos[recurso] += cantidad;
+                }
+                else{
+                    
+                    dicRecursos.Add(recurso, cantidad);
+
+                }
+    }
+        private static void verInventario(Dictionary<string, int> dicRecursos)
+    {
+        foreach (KeyValuePair<string,int> recurso in dicRecursos)
+            {
+               Console.WriteLine("Hay " + recurso.Value +" de " + recurso.Key + ".")     ;
+            }
+    }
         private static int pedirInt(string x){
             Console.WriteLine(x);
             return int.Parse(Console.ReadLine());
