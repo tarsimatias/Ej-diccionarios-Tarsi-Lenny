@@ -9,6 +9,7 @@ class Program
                  { "Madera", 15 },
                  {"Ladrillo", 13}
         };
+        int tarsiHizoCambios= 0;
         int menu;
         List<string> opciones = new List<string>()
         {
